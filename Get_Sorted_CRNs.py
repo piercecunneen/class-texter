@@ -3,11 +3,13 @@ from bs4 import BeautifulSoup
 from class_search_web_scrapping import  GetOptions, GetClasses
 import time
 
+SORTED_CRN_PATH = '/tmp/test.txt'
+
 # Returns a list that is redonk large. Use Write_Courses_iter to return a generator with smaller pieces
 def Write_Courses():
 	Options = GetOptions()
 	subjects = Options[3].values()
-	term = "201610"
+	term = "201620"
 	ATTR = '0ANY'
 	Division = "UG"
 	Campus = "M"
@@ -15,36 +17,24 @@ def Write_Courses():
 	Courses = GetClasses(term, subjects, Credit, ATTR, Division, Campus)
 	return Courses
 
-def Write_Courses_iter():
-	Options = GetOptions()
-	subjects = Options[3].values()
-	term = "201610"
-	ATTR = '0ANY'
-	Division = "UG"
-	Campus = "M"
-	Credit = "A"
-	for subject in subjects:
-		Courses = GetClasses(term, subject, Credit, ATTR, Division, Campus)
-		yield Courses
-	
+def Write_Sorted_CRNS():
+	# with open('/home/pcunneen/class-texter/sorted_CRNs.txt', "") as f:
+	courses = Write_Courses()
+	sorted_courses = sorted(courses, key=lambda k: k['CRN'])
+	with open(SORTED_CRN_PATH, "w") as f:
+		for course in sorted_courses:
+			f.write("{} {}\n".format(course['CRN'], course['View_Books'].split('dept-1=')[1].split('&course-1')[0]))
+
 def Get_CRN_List():
 	crn_list = []
-	with open('/home/flask/class_text/sorted_CRNs.txt', "r") as f:
-		crn_list = f.read().split("\n")
+	with open(SORTED_CRN_PATH, "r") as f:
+		line = f.readline().rstrip()
+		while line:
+			crn_list.append(line)
+			line = f.readline().rstrip()
 	while crn_list[-1] == "":
 		crn_list.pop()
-	return [i for i in crn_list]
-
-# def Get_Crns():
-# 	Courses = Write_Courses_iter()
-# 	CRNs = {}
-# 	Sorted_Crns = []
-
-# 	for course in Courses:
-# 		CRNs[course["CRN"]] = course["Title"] + "|" + course["Course - Sec"] + "|" + course["CRN"] + "|" + course["Opn"]
-	
-# 	Sorted_Crns = sorted(CRNs.keys())
-# 	return Sorted_Crns, CRNs
+	return crn_list
 
 
 # Performs a binary search for value in CRN_Numbers
@@ -67,3 +57,6 @@ def is_Valid(value, CRN_Numbers):
 			return CRN_Numbers[middle].split(" ")[1]
 	return False
 
+if __name__ == "__main__":
+	for i in Get_CRN_List():
+		print i
