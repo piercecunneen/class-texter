@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from class_search_web_scrapping import  GetOptions, GetClasses
 import time
 
-SORTED_CRN_PATH = '/tmp/test.txt'
+SORTED_CRN_PATH = '/Users/piercecunneen/Documents/NDreviews/class_texter/sorted_CRNs.txt'
 
 # Returns a list that is redonk large. Use Write_Courses_iter to return a generator with smaller pieces
 def Write_Courses():
@@ -36,7 +36,6 @@ def Get_CRN_List():
 		crn_list.pop()
 	return crn_list
 
-
 # Performs a binary search for value in CRN_Numbers
 # returns a department if the crn value was found that cooresponds to the crn
 # returns false if value not in CRN_Numbers
@@ -56,7 +55,3 @@ def is_Valid(value, CRN_Numbers):
 		else:
 			return CRN_Numbers[middle].split(" ")[1]
 	return False
-
-if __name__ == "__main__":
-	for i in Get_CRN_List():
-		print i

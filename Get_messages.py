@@ -6,7 +6,7 @@ import sqlite3 as lite
 import os
 
 
-DB_PATH = "/Users/piercecunneen/Documents/class-texter/text_alerts.sqlite"
+DB_PATH = "/Users/piercecunneen/Documents/NDreviews/class_texter/text_alerts.sqlite"
 def Check_for_openings():
 	conn = lite.connect(DB_PATH)
 	with conn:
